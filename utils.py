@@ -1,4 +1,4 @@
-"""This module offers some basic utility methods to create and delete redshift clusters.
+"""This module offers some basic utility functions to create and delete redshift clusters.
 Functions are mainly for the purpose of the project, hence they are not generic.
 
 PLEASE before running make sure to populate the following global variables:
