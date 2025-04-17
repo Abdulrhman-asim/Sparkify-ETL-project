@@ -106,7 +106,8 @@ def create_redshift_cluster(access_key, access_secret):
 
     while (time.time() - start_time) < timeout_mins * 60:
         cluster_props = redshift.describe_clusters(ClusterIdentifier=CLUSTER_IDENTIFIER)['Clusters'][0]
-        if cluster_props['ClusterStatus'] == 'Available':
+        print(f"Cluster status: {cluster_props['ClusterStatus']}")
+        if cluster_props['ClusterStatus'] == 'available':
             host = cluster_props['Endpoint']['Address']
             break
         time.sleep(15)
@@ -157,7 +158,7 @@ def delete_redshift_cluster(access_key, access_secret):
     for i in range(5):
         try:
             status = redshift.describe_clusters(ClusterIdentifier=CLUSTER_IDENTIFIER)['Clusters'][0]['ClusterStatus']
-            print(f'Cluster status is: {status}')
+            print(f'Cluster status: {status}')
             time.sleep(30)  # wait for 30 secs before checking again
         except redshift.exceptions.ClusterNotFoundFault:
             print('Cluster no longer found (deletion confirmed)')

@@ -7,6 +7,11 @@ from sql_queries import create_table_queries, drop_table_queries
 
 @timer_wrap
 def drop_tables(cur, conn):
+    """Drops existing tables in the data warehouse.
+
+    :param psycopg2.cursor cur: Cursor object used for executing table dropping queries.
+    :param psycopg2.connection conn: Connection object to commit changes to the database.
+    """
     print('Dropping tables...')
     timed_execute = timer_wrap(cur.execute)
     for query in drop_table_queries:
@@ -16,6 +21,11 @@ def drop_tables(cur, conn):
 
 @timer_wrap
 def create_tables(cur, conn):
+    """Creates tables in the data warehouse.
+
+    :param psycopg2.cursor cur: Cursor object used for executing table creation queries.
+    :param psycopg2.connection conn: Connection object to commit changes to the database.
+    """
     print('Creating tables...')
     timed_execute = timer_wrap(cur.execute)
     for query in create_table_queries:

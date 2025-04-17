@@ -133,7 +133,7 @@ REGION 'us-west-2';
 
 songplay_table_insert = ("""
 INSERT INTO songplay (start_time, user_id, level, song_id, artist_id ,session_id ,user_agent)
-SELECT
+SELECT DISTINCT
     se.ts           AS start_time, 
     se.userId       AS user_id,
     se.level,
@@ -149,7 +149,7 @@ WHERE
 
 user_table_insert = ("""
 INSERT INTO "user" (user_id, first_name, last_name, gender, level)
-SELECT
+SELECT DISTINCT
     userId       AS user_id,
     firstName    AS first_name,
     lastName     AS last_name,
@@ -163,7 +163,7 @@ WHERE
 
 song_table_insert = ("""
 INSERT INTO song (song_id, title, artist_id, year, duration)
-SELECT
+SELECT DISTINCT
     song_id,
     title,
     artist_id,
@@ -175,7 +175,7 @@ FROM
 
 artist_table_insert = ("""
 INSERT INTO artist (artist_id, name, location, artist_latitude, artist_longitude)
-SELECT
+SELECT DISTINCT
     artist_id,
     artist_name     AS name,
     artist_location AS location,
@@ -187,14 +187,14 @@ FROM
 
 time_table_insert = ("""
 INSERT INTO "time" (start_time, hour, day, week, month, year, weekday)
-SELECT
-    ts                                              AS start_time,
-    EXTRACT(HOUR FROM TIMESTAMP 'epoch' + (ts / 1000.0) * INTERVAL '1 second')    AS hour,
-    EXTRACT(DAY FROM TIMESTAMP 'epoch' + (ts / 1000.0) * INTERVAL '1 second')     AS day,
-    EXTRACT(WEEK FROM TIMESTAMP 'epoch' + (ts / 1000.0) * INTERVAL '1 second')    AS week,
-    EXTRACT(MONTH FROM TIMESTAMP 'epoch' + (ts / 1000.0) * INTERVAL '1 second')    AS month,
-    EXTRACT(YEAR FROM TIMESTAMP 'epoch' + (ts / 1000.0) * INTERVAL '1 second')     AS year,
-    EXTRACT(DOW FROM TIMESTAMP 'epoch' + (ts / 1000.0) * INTERVAL '1 second')      AS weekday
+SELECT DISTINCT
+    ts                                                                              AS start_time,
+    EXTRACT(HOUR FROM TIMESTAMP 'epoch' + (ts / 1000.0) * INTERVAL '1 second')      AS hour,
+    EXTRACT(DAY FROM TIMESTAMP 'epoch' + (ts / 1000.0) * INTERVAL '1 second')       AS day,
+    EXTRACT(WEEK FROM TIMESTAMP 'epoch' + (ts / 1000.0) * INTERVAL '1 second')      AS week,
+    EXTRACT(MONTH FROM TIMESTAMP 'epoch' + (ts / 1000.0) * INTERVAL '1 second')     AS month,
+    EXTRACT(YEAR FROM TIMESTAMP 'epoch' + (ts / 1000.0) * INTERVAL '1 second')      AS year,
+    EXTRACT(DOW FROM TIMESTAMP 'epoch' + (ts / 1000.0) * INTERVAL '1 second')       AS weekday
 FROM
     staging_events
 WHERE
