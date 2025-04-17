@@ -8,10 +8,10 @@ config.read('dwh.cfg')
 
 staging_events_table_drop = "DROP TABLE IF EXISTS staging_events;"
 staging_songs_table_drop = "DROP TABLE IF EXISTS staging_songs;"
-songplay_table_drop = "DROP TABLE IF EXISTS songplay;"
-user_table_drop = "DROP TABLE IF EXISTS \"user\";"
-song_table_drop = "DROP TABLE IF EXISTS song;"
-artist_table_drop = "DROP TABLE IF EXISTS artist;"
+songplay_table_drop = "DROP TABLE IF EXISTS songplays;"
+user_table_drop = "DROP TABLE IF EXISTS \"users\";"
+song_table_drop = "DROP TABLE IF EXISTS songs;"
+artist_table_drop = "DROP TABLE IF EXISTS artists;"
 time_table_drop = "DROP TABLE IF EXISTS \"time\";"
 
 # CREATE TABLES
@@ -55,13 +55,13 @@ CREATE TABLE staging_songs(
 """)
 
 songplay_table_create = ("""
-CREATE TABLE songplay(
+CREATE TABLE songplays(
     songplay_id INTEGER         IDENTITY(0,1) PRIMARY KEY,
     start_time  BIGINT          NOT NULL REFERENCES "time"(start_time), 
-    user_id     INTEGER         NOT NULL REFERENCES "user"(user_id),
+    user_id     INTEGER         NOT NULL REFERENCES "users"(user_id),
     level       VARCHAR(10)     NOT NULL,
-    song_id     VARCHAR(25)     NOT NULL REFERENCES song(song_id),
-    artist_id   VARCHAR(25)     NOT NULL REFERENCES artist(artist_id),
+    song_id     VARCHAR(25)     NOT NULL REFERENCES songs(song_id),
+    artist_id   VARCHAR(25)     NOT NULL REFERENCES artists(artist_id),
     session_id  INTEGER         NOT NULL,
     location    VARCHAR(65535),
     user_agent  TEXT            NOT NULL
@@ -69,7 +69,7 @@ CREATE TABLE songplay(
 """)
 
 user_table_create = ("""
-CREATE TABLE "user"(
+CREATE TABLE "users"(
     user_id     INTEGER      PRIMARY KEY,
     first_name  TEXT         NOT NULL,
     last_name   TEXT         NOT NULL,
@@ -79,7 +79,7 @@ CREATE TABLE "user"(
 """)
 
 song_table_create = ("""
-CREATE TABLE song(
+CREATE TABLE songs(
     song_id     VARCHAR(20)           PRIMARY KEY,
     title       VARCHAR(65535)        NOT NULL,
     artist_id   VARCHAR(25)           NOT NULL,
@@ -89,7 +89,7 @@ CREATE TABLE song(
 """)
 
 artist_table_create = ("""
-CREATE TABLE artist(
+CREATE TABLE artists(
     artist_id           VARCHAR(25)           PRIMARY KEY,
     name                VARCHAR(65535)        NOT NULL,
     location            VARCHAR(65535),
@@ -132,7 +132,7 @@ REGION 'us-west-2';
 # FINAL TABLES
 
 songplay_table_insert = ("""
-INSERT INTO songplay (start_time, user_id, level, song_id, artist_id ,session_id ,user_agent)
+INSERT INTO songplays (start_time, user_id, level, song_id, artist_id ,session_id ,user_agent)
 SELECT DISTINCT
     se.ts           AS start_time, 
     se.userId       AS user_id,
@@ -142,13 +142,13 @@ SELECT DISTINCT
     se.sessionId    AS session_id,
     se.userAgent    AS user_agent
 FROM
-    staging_events se JOIN staging_songs ss ON se.song = ss.title
+    staging_events se JOIN staging_songs ss ON se.songs = ss.title
 WHERE 
     se.page = 'NextSong';
 """)
 
 user_table_insert = ("""
-INSERT INTO "user" (user_id, first_name, last_name, gender, level)
+INSERT INTO "users" (user_id, first_name, last_name, gender, level)
 SELECT DISTINCT
     userId       AS user_id,
     firstName    AS first_name,
@@ -162,7 +162,7 @@ WHERE
 """)
 
 song_table_insert = ("""
-INSERT INTO song (song_id, title, artist_id, year, duration)
+INSERT INTO songs (song_id, title, artist_id, year, duration)
 SELECT DISTINCT
     song_id,
     title,
@@ -174,7 +174,7 @@ FROM
 """)
 
 artist_table_insert = ("""
-INSERT INTO artist (artist_id, name, location, artist_latitude, artist_longitude)
+INSERT INTO artists (artist_id, name, location, artist_latitude, artist_longitude)
 SELECT DISTINCT
     artist_id,
     artist_name     AS name,
