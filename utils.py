@@ -1,9 +1,9 @@
-"""This module offers some basic utility methods to create and delete redshift clusters.
+"""This module offers some basic utility functions to create and delete Redshift clusters.
 Functions are mainly for the purpose of the project, hence they are not generic.
 
-PLEASE before running make sure to populate the following global variables:
-- KEY = Access key ID for an AWS user with permissions to create and delete redshift clusters.
-- SECRET = Secret access key for an AWS user with permissions to create and delete redshift clusters.
+IMPORTANT - Before running, make sure to populate the following global variables:
+- KEY = Access key ID for an AWS user with permissions to create and delete Redshift clusters.
+- SECRET = Secret access key for an AWS user with permissions to create and delete Redshift clusters.
 - CLUSTER_IDENTIFIER = ... The cluster identifier, which must be unique for the region it's created in.
 """
 
@@ -49,7 +49,7 @@ def pretty_redshift_props(props):
 
 
 def create_redshift_cluster(access_key, access_secret):
-    """Creates a 'non-custom' redshift cluster for the purpose of the project.
+    """Creates a 'non-custom' Redshift cluster for the purpose of the project.
         Following parameters must be filled in the "dwh.cfg" file:
             - CLUSTER.db_name
             - CLUSTER.db_user
@@ -57,8 +57,8 @@ def create_redshift_cluster(access_key, access_secret):
             - CLUSTER.db_port
             - IAM_ROLE.arn
 
-    :param (str) access_key: Access key id for an AWS user with permissions to create a redshift cluster.
-    :param (str) access_secret: Secret access key for an AWS user with permissions to create a redshift cluster.
+    :param (str) access_key: Access key id for an AWS user with permissions to create a Redshift cluster.
+    :param (str) access_secret: Secret access key for an AWS user with permissions to create a Redshift cluster.
 
     :raises Exception: If an error occurs while AWS is processing the cluster creation process.
 
@@ -128,11 +128,11 @@ def create_redshift_cluster(access_key, access_secret):
 
 
 def delete_redshift_cluster(access_key, access_secret):
-    """Deletes the redshift cluster created for the project purpose.
+    """Deletes the Redshift cluster created for the project purpose.
         (Doesn't delete IAM role )
 
-    :param (str) access_key: Access key id for an AWS user with permissions to delete redshift clusters.
-    :param (str) access_secret: Secret access key for an AWS user with permissions to create redshift clusters.
+    :param (str) access_key: Access key id for an AWS user with permissions to delete Redshift clusters.
+    :param (str) access_secret: Secret access key for an AWS user with permissions to create Redshift clusters.
 
     :raises Exception: If an error occurs while AWS is processing the cluster creation process.
     """
